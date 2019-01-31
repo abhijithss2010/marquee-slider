@@ -1,0 +1,55 @@
+.marquee-slider {
+  overflow: hidden;
+}
+
+.marquee-slider .ms-track {
+  display: table;
+  transform: translate3d(0%,0,0);
+}
+
+.marquee-slider .ms-track .item {
+  display: table-cell;
+}
+
+.marquee-slider .ms-nav {
+  display: table;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+  height: 100px;
+  background:#ccc;
+  position: relative;
+
+}
+
+.marquee-slider .ms-nav .item {
+  display: table-cell;
+}
+
+.marquee-slider .ms-nav .item img{
+  height: 100px;
+  width:auto;
+}
+
+.ms-scroll {
+  background-color: transparent;
+  border:2px solid red;
+  color: white;
+  font-size: 20px;
+  font-family: sans-serif;
+  border-radius: 8px;
+  width: 120px;
+  /* This makes things *much* easier */
+  box-sizing: border-box;
+  height:100px;
+  position: absolute;
+  top: 0;
+  left:0;
+  -webkit-transform: translate(0px, 0px);
+          transform: translate(0px, 0px);
+}
+
