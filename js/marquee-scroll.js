@@ -114,45 +114,49 @@
 
     // bind all events 
 
-    _this.$el.on( "mousedown touchstart",".ms-nav", function(event) {
+    _this.$el.on("mousedown touchstart", ".ms-nav", function (event) {
       _this.dragStart(event);
     });
 
-    _this.$el.on( "mousemove touchmove",".ms-nav", function(event) {
+    _this.$el.on("mousemove touchmove", ".ms-nav", function (event) {
       _this.drag(event);
     });
 
-    _this.$el.on( "mouseup touchend",".ms-nav", function(event) {
+    _this.$el.on("mouseup touchend", ".ms-nav", function (event) {
       _this.dragEnd(event);
     });
   };
 
   Plugin.prototype.dragStart = function (event) {
+
+    console.log(event);
     var _this = this;
+    var origEvent = event.originalEvent;
 
-    if (event.type === "touchstart") {
-      _this.initialX = event.touches[0].clientX - _this.xOffset;
-      _this.initialY = event.touches[0].clientY - _this.yOffset;
-    } else {
-      _this.initialX = event.clientX - _this.xOffset;
-      _this.initialY = event.clientY - _this.yOffset;
-    }
-
-    if (event.target === _this.$el.find('.ms-scroll')[0]) {
+    if ($(event.target).is(_this.$el.find('.ms-scroll'))) {
+      if (event.type === "touchstart") {
+        _this.initialX = origEvent.touches[0].clientX - _this.xOffset;
+        _this.initialY = origEvent.touches[0].clientY - _this.yOffset;
+      } else {
+        _this.initialX = event.clientX - _this.xOffset;
+        _this.initialY = event.clientY - _this.yOffset;
+      }
       _this.active = true;
     }
+
   };
 
   Plugin.prototype.drag = function (event) {
     var _this = this;
+    var origEvent = event.originalEvent;
 
     if (_this.active) {
-      
+
       event.preventDefault();
-    
+
       if (event.type === "touchmove") {
-        _this.currentX = event.touches[0].clientX - _this.initialX;
-        _this.currentY = event.touches[0].clientY - _this.initialY;
+        _this.currentX = origEvent.touches[0].clientX - _this.initialX;
+        _this.currentY = origEvent.touches[0].clientY - _this.initialY;
       } else {
         _this.currentX = event.clientX - _this.initialX;
         _this.currentY = event.clientY - _this.initialY;

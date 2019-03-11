@@ -47,13 +47,10 @@
       </div>
     </div>
   </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
   <script>
-    var dragItem = $("#item");
-    var container = $("#outerContainer");
-
-     console.log(container);
+    var dragItem = document.querySelector("#item");
+    var container = document.querySelector("#container");
 
     var active = false;
     var currentX;
@@ -63,42 +60,25 @@
     var xOffset = 0;
     var yOffset = 0;
 
-    // container.addEventListener("touchstart", dragStart, false);
-    // container.addEventListener("touchend", dragEnd, false);
-    // container.addEventListener("touchmove", drag, false);
+    container.addEventListener("touchstart", dragStart, false);
+    container.addEventListener("touchend", dragEnd, false);
+    container.addEventListener("touchmove", drag, false);
 
-    // container.addEventListener("mousedown", dragStart, false);
-    // container.addEventListener("mouseup", dragEnd, false);
-    // container.addEventListener("mousemove", drag, false);
-
-   container.on( "mousedown touchstart","#container", function(event) {
-
-      dragStart(event);
-    });
-
-   container.on( "mousemove touchmove","#container", function(event) {
-
-      drag(event);
-    });
-
-   container.on( "mouseup touchend","#container", function(event) {
-
-      dragEnd(event);
-    });
+    container.addEventListener("mousedown", dragStart, false);
+    container.addEventListener("mouseup", dragEnd, false);
+    container.addEventListener("mousemove", drag, false);
 
     function dragStart(e) {
-      // debugger;
-      var origEvent = e.originalEvent;
-      if ($(e.target).is(dragItem)) {
+      debugger;
       if (e.type === "touchstart") {
-        initialX =  origEvent.touches[0].clientX - xOffset;
-        initialY =  origEvent.touches[0].clientY - yOffset;
+        initialX = e.touches[0].clientX - xOffset;
+        initialY = e.touches[0].clientY - yOffset;
       } else {
         initialX = e.clientX - xOffset;
-        initialY = e.clientY - yOffset; 
+        initialY = e.clientY - yOffset;
       }
 
-      
+      if (e.target === dragItem) {
         active = true;
       }
     }
@@ -111,14 +91,13 @@
     }
 
     function drag(e) {
-      var origEvent = e.originalEvent;
       if (active) {
       
         e.preventDefault();
       
         if (e.type === "touchmove") {
-          currentX = origEvent.touches[0].clientX - initialX;
-          currentY = origEvent.touches[0].clientY - initialY;
+          currentX = e.touches[0].clientX - initialX;
+          currentY = e.touches[0].clientY - initialY;
         } else {
           currentX = e.clientX - initialX;
           currentY = e.clientY - initialY;
@@ -127,22 +106,13 @@
         xOffset = currentX;
         yOffset = currentY;
 
-
         setTranslate(currentX, currentY, dragItem);
       }
     }
 
-    function setTranslate(xPos, yPos, $el) {
-      $el.css({
-      '-webkit-transform': 'translate(' + xPos + 'px, ' + yPos + 'px)',
-      '-moz-transform': 'translate(' + xPos + 'px, ' + yPos + 'px)',
-      '-ms-transform': 'translate(' + xPos + 'px, ' + yPos + 'px)',
-      '-o-transform': 'translate(' + xPos + 'px, ' + yPos + 'px)',
-      'transform': 'translate(' + xPos + 'px, ' + yPos + 'px)'
-    });
+    function setTranslate(xPos, yPos, el) {
+      el.style.transform = "translate3d(" + xPos + "px, " + yPos + "px, 0)";
     }
-
-
   </script>
 </body>
 
