@@ -74,29 +74,11 @@
 
     _this.scrollerWidthAdjust();
 
-    //add dragging of scroller using interact js
-
     _this.addScrollHandleDragging();
-
-    // interact(_this.$el.find('.ms-scroll')[0])
-    //   .draggable({
-    //     onmove: _this.dragMoveListener.bind(_this),
-    //     onend: _this.dragEndListener.bind(_this),
-    //     autoScroll: true,
-    //     restrict: {
-    //       restriction: 'parent',
-    //       elementRect: {
-    //         top: 0,
-    //         left: 0,
-    //         bottom: 1,
-    //         right: 1
-    //       }
-    //     },
-    //   });
 
     // auto scroll 
     if (_this.settings.autoScroll) {
-      // _this.autoScroll();
+      _this.autoScroll();
     }
 
   };
@@ -129,10 +111,9 @@
 
   Plugin.prototype.dragStart = function (event) {
 
-    console.log(event);
     var _this = this;
     var origEvent = event.originalEvent;
-
+    
     if ($(event.target).is(_this.$el.find('.ms-scroll'))) {
       if (event.type === "touchstart") {
         _this.initialX = origEvent.touches[0].clientX - _this.xOffset;
@@ -142,6 +123,7 @@
         _this.initialY = event.clientY - _this.yOffset;
       }
       _this.active = true;
+      _this.isDragging = true;
     }
 
   };
@@ -165,7 +147,14 @@
       _this.xOffset = _this.currentX;
       _this.yOffset = _this.currentY;
 
-      _this.setTranslate(_this.currentX, 0, _this.$el.find('.ms-scroll'));
+      console.log(_this.xOffset);
+
+      var scrollHandle = _this.$el.find('.ms-scroll');
+
+      _this.setTranslate(_this.currentX, 0, scrollHandle);
+
+      scrollHandle.data('x', _this.currentX);
+      _this.scrollTrack();
     }
   };
 
@@ -176,24 +165,7 @@
     _this.initialY = _this.currentY;
 
     _this.active = false;
-  };
-
-  Plugin.prototype.dragMoveListener = function (event) {
-    var _this = this;
-    var xPos = event.dx;
-
-    _this.isDragging = true;
-
-    _this.scrollHandle(xPos);
-
-    _this.scrollTrack();
-
-  };
-
-  Plugin.prototype.dragEndListener = function (event) {
-    var _this = this;
     _this.isDragging = false;
-    console.log('drag end');
   };
 
   Plugin.prototype.scrollHandle = function (dx) {
@@ -237,14 +209,11 @@
 
       _this.scrollTrack();
 
-      // console.log(scrollHandle.data('x'), (_this.navWidth - _this.scrollerWidth))
-
       if (scrollHandle.data('x') > (_this.navWidth - _this.scrollerWidth)) {
         scrollHandle.data('x', 0);
       } else {
 
       }
-
 
     }
 
@@ -270,7 +239,6 @@
     _this.navHeight = _this.$el.find('.ms-nav').height();
 
     _this.visibleAreaImageRatio = _this.visibleAreaWidth / _this.trackHeight;
-
     _this.scrollerWidth = _this.visibleAreaImageRatio * _this.navHeight;
 
   };
@@ -301,10 +269,6 @@
 
 
   $.fn.marqueeSlider = function (options) {
-
-    // This is the easiest way to have default options.
-
-    // Greenify the collection based on the settings variable.
 
     return this.each(function () {
       if (!$.data(this, 'marqueeSlider')) {
