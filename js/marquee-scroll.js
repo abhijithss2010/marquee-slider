@@ -17,6 +17,15 @@
     // Current jquery element
     this.$el = $(element);
 
+    // Handle jquery element
+    this.scrollHandle = this.$el.find('.ms-scroll');
+
+    // Handle jquery element
+    this.scrollNav = this.$el.find('.ms-nav');
+
+    // Track jquery element
+    this.scrollTrack = this.$el.find('.ms-track');
+
     this.isDragging = false;
 
     // marqueeSlider settings
@@ -114,7 +123,7 @@
     var _this = this;
     var origEvent = event.originalEvent;
     
-    if ($(event.target).is(_this.$el.find('.ms-scroll'))) {
+    if ($(event.target).is(_this.scrollHandle)) {
       if (event.type === "touchstart") {
         _this.initialX = origEvent.touches[0].clientX - _this.xOffset;
         _this.initialY = origEvent.touches[0].clientY - _this.yOffset;
@@ -132,7 +141,7 @@
     var _this = this;
     var origEvent = event.originalEvent;
 
-    if (_this.active) {
+    if (_this.active ) {
 
       event.preventDefault();
 
@@ -149,13 +158,11 @@
 
       console.log(_this.xOffset);
 
-      var scrollHandle = _this.$el.find('.ms-scroll');
-
       _this.setTranslate(_this.currentX, 0, scrollHandle);
 
-      scrollHandle.data('x', _this.currentX);
+      _this.scrollHandle.data('x', _this.currentX);
       _this.scrollTrack();
-    }
+    } 
   };
 
   Plugin.prototype.dragEnd = function (event) {
@@ -170,31 +177,28 @@
 
   Plugin.prototype.scrollHandle = function (dx) {
     var _this = this;
-    var scrollHandle = _this.$el.find('.ms-scroll');
-    var currentX = (parseFloat(scrollHandle.data('x')) || 0) + dx;
+    var currentX = (parseFloat(_this.scrollHandle.data('x')) || 0) + dx;
 
     _this.setTranslate(currentX, 0, scrollHandle);
 
-    scrollHandle.data('x', currentX);
+    _this.scrollHandle.data('x', currentX);
 
   };
 
   Plugin.prototype.scrollTrack = function () {
     var _this = this;
-    var track = _this.$el.find('.ms-track');
-    var scrollHandle = _this.$el.find('.ms-scroll');
-    var xPos = scrollHandle.data('x');
+    var xPos = _this.scrollHandle.data('x');
 
     var currentX = -((xPos / _this.navHeight) * _this.trackHeight);
 
-    _this.setTranslate(currentX, 0, track);
+    _this.setTranslate(currentX, 0, _this.scrollTrack);
 
   };
 
   Plugin.prototype.autoScroll = function () {
     var _this = this;
 
-    _this.$el.find('.ms-scroll').data('x', 0);
+    _this.scrollHandle.data('x', 0);
 
     _this.animSet = setInterval(_this.scrollAnimation.bind(_this), 1000 / 60);
 
@@ -202,15 +206,14 @@
 
   Plugin.prototype.scrollAnimation = function () {
     var _this = this;
-    var scrollHandle = _this.$el.find('.ms-scroll');
 
     if (!_this.isDragging) {
       _this.scrollHandle(0.2);
 
       _this.scrollTrack();
 
-      if (scrollHandle.data('x') > (_this.navWidth - _this.scrollerWidth)) {
-        scrollHandle.data('x', 0);
+      if (_this.scrollHandle.data('x') > (_this.navWidth - _this.scrollerWidth)) {
+        _this.scrollHandle.data('x', 0);
       } else {
 
       }
@@ -232,11 +235,11 @@
   Plugin.prototype.setPluginVariables = function () {
     var _this = this;
 
-    _this.trackWidth = _this.$el.find('.ms-track').width();
-    _this.navWidth = _this.$el.find('.ms-nav').width();
+    _this.trackWidth =_this.scrollTrack.width();
+    _this.navWidth = _this.scrollNav.width();
     _this.visibleAreaWidth = _this.$el.width();
-    _this.trackHeight = _this.$el.find('.ms-track').height();
-    _this.navHeight = _this.$el.find('.ms-nav').height();
+    _this.trackHeight = _this.scrollTrack.height();
+    _this.navHeight = _this.scrollNav.height();
 
     _this.visibleAreaImageRatio = _this.visibleAreaWidth / _this.trackHeight;
     _this.scrollerWidth = _this.visibleAreaImageRatio * _this.navHeight;
@@ -263,7 +266,7 @@
   Plugin.prototype.scrollerWidthAdjust = function () {
     var _this = this;
     if (_this.scrollerWidth) {
-      _this.$el.find('.ms-scroll').css('width', _this.scrollerWidth + 'px');
+      _this.scrollHandle.css('width', _this.scrollerWidth + 'px');
     }
   };
 
