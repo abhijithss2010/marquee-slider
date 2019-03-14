@@ -23,6 +23,7 @@
   height: 100px;
   background:#ccc;
   position: relative;
+  border:1px solid blue;
 
 }
 
@@ -51,5 +52,6 @@
   left:0;
   -webkit-transform: translate(0px, 0px);
           transform: translate(0px, 0px);
+  z-index: 2;
 }
 
