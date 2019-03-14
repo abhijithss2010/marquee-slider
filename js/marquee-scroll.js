@@ -17,15 +17,6 @@
     // Current jquery element
     this.$el = $(element);
 
-    // Handle jquery element
-    this.scrollHandle = this.$el.find('.ms-scroll');
-
-    // Handle jquery element
-    this.scrollNav = this.$el.find('.ms-nav');
-
-    // Track jquery element
-    this.scrollTrack = this.$el.find('.ms-track');
-
     this.isDragging = false;
 
     // marqueeSlider settings
@@ -71,6 +62,15 @@
       '</div>';
 
     _this.$el.append(template);
+
+    // Handle jquery element
+    _this.$scrollHandle = _this.$el.find('.ms-scroll');
+
+    // Handle jquery element
+    _this.$scrollNav = _this.$el.find('.ms-nav');
+
+    // Track jquery element
+    _this.$scrollTrack = _this.$el.find('.ms-track');
 
   };
 
@@ -123,7 +123,7 @@
     var _this = this;
     var origEvent = event.originalEvent;
     
-    if ($(event.target).is(_this.scrollHandle)) {
+    if ($(event.target).is(_this.$scrollHandle)) {
       if (event.type === "touchstart") {
         _this.initialX = origEvent.touches[0].clientX - _this.xOffset;
         _this.initialY = origEvent.touches[0].clientY - _this.yOffset;
@@ -158,9 +158,9 @@
 
       console.log(_this.xOffset);
 
-      _this.setTranslate(_this.currentX, 0, scrollHandle);
+      _this.setTranslate(_this.currentX, 0, _this.$scrollHandle);
 
-      _this.scrollHandle.data('x', _this.currentX);
+      _this.$scrollHandle.data('x', _this.currentX);
       _this.scrollTrack();
     } 
   };
@@ -177,28 +177,28 @@
 
   Plugin.prototype.scrollHandle = function (dx) {
     var _this = this;
-    var currentX = (parseFloat(_this.scrollHandle.data('x')) || 0) + dx;
+    var currentX = (parseFloat(_this.$scrollHandle.data('x')) || 0) + dx;
 
-    _this.setTranslate(currentX, 0, scrollHandle);
+    _this.setTranslate(currentX, 0, _this.$scrollHandle);
 
-    _this.scrollHandle.data('x', currentX);
+    _this.$scrollHandle.data('x', currentX);
 
   };
 
   Plugin.prototype.scrollTrack = function () {
     var _this = this;
-    var xPos = _this.scrollHandle.data('x');
+    var xPos = _this.$scrollHandle.data('x');
 
     var currentX = -((xPos / _this.navHeight) * _this.trackHeight);
 
-    _this.setTranslate(currentX, 0, _this.scrollTrack);
+    _this.setTranslate(currentX, 0, _this.$scrollTrack);
 
   };
 
   Plugin.prototype.autoScroll = function () {
     var _this = this;
 
-    _this.scrollHandle.data('x', 0);
+    _this.$scrollHandle.data('x', 0);
 
     _this.animSet = setInterval(_this.scrollAnimation.bind(_this), 1000 / 60);
 
@@ -212,8 +212,8 @@
 
       _this.scrollTrack();
 
-      if (_this.scrollHandle.data('x') > (_this.navWidth - _this.scrollerWidth)) {
-        _this.scrollHandle.data('x', 0);
+      if (_this.$scrollHandle.data('x') > (_this.navWidth - _this.scrollerWidth)) {
+        _this.$scrollHandle.data('x', 0);
       } else {
 
       }
@@ -235,11 +235,11 @@
   Plugin.prototype.setPluginVariables = function () {
     var _this = this;
 
-    _this.trackWidth =_this.scrollTrack.width();
-    _this.navWidth = _this.scrollNav.width();
+    _this.trackWidth =_this.$scrollTrack.width();
+    _this.navWidth = _this.$scrollNav.width();
     _this.visibleAreaWidth = _this.$el.width();
-    _this.trackHeight = _this.scrollTrack.height();
-    _this.navHeight = _this.scrollNav.height();
+    _this.trackHeight = _this.$scrollTrack.height();
+    _this.navHeight = _this.$scrollNav.height();
 
     _this.visibleAreaImageRatio = _this.visibleAreaWidth / _this.trackHeight;
     _this.scrollerWidth = _this.visibleAreaImageRatio * _this.navHeight;
@@ -266,7 +266,7 @@
   Plugin.prototype.scrollerWidthAdjust = function () {
     var _this = this;
     if (_this.scrollerWidth) {
-      _this.scrollHandle.css('width', _this.scrollerWidth + 'px');
+      _this.$scrollHandle.css('width', _this.scrollerWidth + 'px');
     }
   };
 
