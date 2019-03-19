@@ -110,7 +110,7 @@
       _this.drag(event);
     });
 
-    _this.$el.on("mouseup touchend mouseout", ".ms-nav", function (event) {
+    _this.$el.on("mouseup touchend", ".ms-nav", function (event) {
       _this.dragEnd(event);
     });
   };
@@ -153,12 +153,10 @@
         } else {
           _this.currentX = event.clientX - _this.initialX;
         }
+
+        _this.xOffset = _this.scrollHandle(_this.currentX);
   
-        _this.xOffset = _this.currentX;
-  
-        _this.setTranslate(_this.currentX, 0, _this.$scrollHandle);
-  
-        _this.currentNavXPos = _this.currentX;
+    
         _this.scrollTrack();
       } else {
         // console.log('else');
@@ -182,13 +180,23 @@
 
   };
 
-  Plugin.prototype.scrollHandle = function (dx) {
+  Plugin.prototype.scrollHandle = function (xPos) {
     var _this = this;
-    var currentX = (_this.currentNavXPos || 0) + dx;
 
-    _this.setTranslate(currentX, 0, _this.$scrollHandle);
+    // _this.subI = 0;
+    var movexPos = (xPos - 100 - _this.scrollerWidth);
 
-    _this.currentNavXPos = currentX;
+    console.log(movexPos,(_this.navWidth/_this.visibleAreaWidth));
+
+    if(xPos > (_this.visibleAreaWidth - _this.scrollerWidth - 100) && (_this.navWidth - _this.visibleAreaWidth) < movexPos){
+      _this.setTranslate(-movexPos, 0, _this.$scrollNav);
+    }
+
+    _this.setTranslate(xPos, 0, _this.$scrollHandle);
+
+    _this.currentNavXPos = xPos;
+
+    return _this.currentNavXPos;
 
   };
 
@@ -198,7 +206,6 @@
     var currentX = -((xPos / _this.navHeight) * _this.trackHeight);
 
     _this.setTranslate(currentX, 0, _this.$scrollTrack);
-
   };
 
   Plugin.prototype.autoScroll = function () {
@@ -213,7 +220,8 @@
     var _this = this;
 
     if (!_this.isDragging) {
-      _this.scrollHandle(0.2);
+      var xPos = (_this.currentNavXPos || 0) + 0.2;
+      _this.scrollHandle(xPos);
 
       _this.scrollTrack();
 
