@@ -24,6 +24,8 @@
 
     this.init();
 
+    this.movexPos = 0.2;
+
     return this;
   }
 
@@ -87,7 +89,7 @@
 
     // auto scroll 
     if (_this.settings.autoScroll) {
-      _this.autoScroll();
+      // _this.autoScroll();
     }
 
   };
@@ -118,7 +120,7 @@
   Plugin.prototype.dragStart = function (event) {
     
     var _this = this;
-    console.log(_this.xOffset);
+    // console.log(_this.xOffset);
     var origEvent = event.originalEvent;
     
     if ($(event.target).is(_this.$scrollHandle)) {
@@ -138,7 +140,7 @@
   Plugin.prototype.drag = function (event) {
     
     var _this = this;
-    console.log(_this.xOffset);
+    // console.log(_this.xOffset);
     var origEvent = event.originalEvent;
 
     if (_this.active) {
@@ -159,7 +161,7 @@
     
         _this.scrollTrack();
       } else {
-        // console.log('else');
+        console.log('else');
         _this.xOffset = 0;
         _this.currentNavXPos = 0;
       }
@@ -170,7 +172,7 @@
   Plugin.prototype.dragEnd = function (event) {
     
     var _this = this;
-    console.log(_this.xOffset);
+    // console.log(_this.xOffset);
 
     _this.initialX = _this.currentX;
 
@@ -184,14 +186,15 @@
     var _this = this;
 
     // _this.subI = 0;
-    var movexPos = (xPos - 100 - _this.scrollerWidth);
+    
+    console.log(xPos,(xPos%_this.visibleAreaWidth),_this.navWidth/_this.visibleAreaWidth);
+    
+    // if(xPos > (_this.visibleAreaWidth - _this.scrollerWidth - 100)){
+    //   _this.movexPos += 0.2;
+    //   _this.setTranslate(-_this.movexPos, 0, _this.$scrollNav);
+    // }
 
-    console.log(movexPos,(_this.navWidth/_this.visibleAreaWidth));
-
-    if(xPos > (_this.visibleAreaWidth - _this.scrollerWidth - 100) && (_this.navWidth - _this.visibleAreaWidth) < movexPos){
-      _this.setTranslate(-movexPos, 0, _this.$scrollNav);
-    }
-
+    _this.setTranslate(-((xPos) * ((_this.navWidth/_this.visibleAreaWidth)-1)), 0, _this.$scrollNav);
     _this.setTranslate(xPos, 0, _this.$scrollHandle);
 
     _this.currentNavXPos = xPos;
