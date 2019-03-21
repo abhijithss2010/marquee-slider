@@ -58,7 +58,9 @@
       templateInner +
       '</div>' +
       '<div class="ms-nav">' +
+      '<div class="ms-nav-items">' +
       templateInner +
+      '</div>' +
       '<div class="ms-scroll">' +
       '</div>' +
       '</div>';
@@ -70,6 +72,9 @@
 
     // Handle jquery element
     _this.$scrollNav = _this.$el.find('.ms-nav');
+
+    // Nav item Conatiner jquery element
+    _this.$navItemContainer = _this.$el.find('.ms-nav-items');
 
     // Track jquery element
     _this.$scrollTrack = _this.$el.find('.ms-track');
@@ -89,7 +94,7 @@
 
     // auto scroll 
     if (_this.settings.autoScroll) {
-      // _this.autoScroll();
+      _this.autoScroll();
     }
 
   };
@@ -123,13 +128,17 @@
     // console.log(_this.xOffset);
     var origEvent = event.originalEvent;
     
-    if ($(event.target).is(_this.$scrollHandle)) {
+   
 
       if (event.type === "touchstart") {
         _this.initialX = origEvent.touches[0].clientX - _this.xOffset;
       } else {
         _this.initialX = event.clientX - _this.xOffset;
       }
+
+      if ($(event.target).is(_this.$scrollHandle)) {
+
+
       _this.active = true;
       _this.isDragging = true;
     
@@ -149,22 +158,35 @@
 
       event.preventDefault();
 
-      if(_this.xOffset >= 0 && _this.xOffset < (_this.navWidth - _this.scrollerWidth)){
+      // if(_this.xOffset >= 0 && _this.xOffset < (_this.navWidth - _this.scrollerWidth)){
         if (event.type === "touchmove") {
           _this.currentX = origEvent.touches[0].clientX - _this.initialX;
         } else {
           _this.currentX = event.clientX - _this.initialX;
         }
 
-        _this.xOffset = _this.scrollHandle(_this.currentX);
+        // console.log(_this.currentX+_this.scrollerWidth);
+        if(_this.currentX+_this.scrollerWidth >= _this.navWidth){
+          _this.percentScrolled = _this.scrollHandle(_this.navWidth -_this.scrollerWidth);   
+        } else if(_this.currentX <= 0) {
+          _this.percentScrolled = _this.scrollHandle(0);   
+        } else {
+          _this.percentScrolled = _this.scrollHandle(_this.currentX);   
+        }
+        // console.log(_this.percentScrolled);
+        console.log(_this.navItemContainerWidth , _this.visibleAreaWidth)
+        if(_this.navItemContainerWidth > _this.visibleAreaWidth){
+          _this.scrollNavTrack();
+        }
+        _this.scrollTrack();
+
   
     
-        _this.scrollTrack();
-      } else {
-        console.log('else');
-        _this.xOffset = 0;
-        _this.currentNavXPos = 0;
-      }
+      // } else {
+      //   console.log('else');
+      //   _this.xOffset = 0;
+      //   _this.currentNavXPos = 0;
+      // }
 
     }
   };
@@ -187,29 +209,39 @@
 
     // _this.subI = 0;
     
-    console.log(xPos,(xPos%_this.visibleAreaWidth),_this.navWidth/_this.visibleAreaWidth);
+    // console.log(xPos,(xPos%_this.visibleAreaWidth),_this.navWidth/_this.visibleAreaWidth);
     
     // if(xPos > (_this.visibleAreaWidth - _this.scrollerWidth - 100)){
     //   _this.movexPos += 0.2;
     //   _this.setTranslate(-_this.movexPos, 0, _this.$scrollNav);
     // }
 
-    _this.setTranslate(-((xPos) * ((_this.navWidth/_this.visibleAreaWidth)-1)), 0, _this.$scrollNav);
+    // _this.setTranslate(-((xPos) * ((_this.navWidth/_this.visibleAreaWidth)-1)), 0, _this.$scrollNav);
     _this.setTranslate(xPos, 0, _this.$scrollHandle);
 
-    _this.currentNavXPos = xPos;
+    _this.xOffset = _this.currentNavXPos = xPos;
 
-    return _this.currentNavXPos;
+
+    return (xPos/(_this.navWidth - _this.scrollerWidth)) * 100;
 
   };
 
   Plugin.prototype.scrollTrack = function () {
     var _this = this;
-    var xPos = _this.currentNavXPos;
-    var currentX = -((xPos / _this.navHeight) * _this.trackHeight);
-
-    _this.setTranslate(currentX, 0, _this.$scrollTrack);
+    var xPos = ((_this.percentScrolled/100) * (_this.trackWidth- _this.visibleAreaWidth));
+    // console.log(_this.percentScrolled)
+    _this.setTranslate(-xPos, 0, _this.$scrollTrack);
   };
+
+  Plugin.prototype.scrollNavTrack = function () {
+    var _this = this;
+
+    var xPos = ((_this.percentScrolled/100) * (_this.navItemContainerWidth - _this.visibleAreaWidth));
+    // console.log(_this.percentScrolled/100,_this.navItemContainerWidth)
+
+    _this.setTranslate(-xPos, 0, _this.$navItemContainer);
+  };
+
 
   Plugin.prototype.autoScroll = function () {
     var _this = this;
@@ -224,7 +256,7 @@
 
     if (!_this.isDragging) {
       var xPos = (_this.currentNavXPos || 0) + 0.2;
-      _this.scrollHandle(xPos);
+      _this.percentScrolled=_this.scrollHandle(xPos);
 
       _this.scrollTrack();
 
@@ -253,6 +285,7 @@
 
     _this.trackWidth =_this.$scrollTrack.width();
     _this.navWidth = _this.$scrollNav.width();
+    _this.navItemContainerWidth = _this.$navItemContainer.width();
     _this.visibleAreaWidth = _this.$el.width();
     _this.trackHeight = _this.$scrollTrack.height();
     _this.navHeight = _this.$scrollNav.height();

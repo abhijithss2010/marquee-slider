@@ -4,7 +4,8 @@
 
 .marquee-slider .ms-track {
   display: table;
-  transform: translate3d(0%,0,0);
+  -webkit-transform: translate3d(0%,0,0);
+          transform: translate3d(0%,0,0);
 }
 
 .marquee-slider .ms-track .item {
@@ -12,10 +13,9 @@
 }
 
 .marquee-slider .ms-nav {
-  display: table;
+  display: inline-block;
   -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
+    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */
        -moz-user-select: none; /* Firefox */
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
@@ -24,7 +24,13 @@
   background:#ccc;
   position: relative;
   border:1px solid blue;
+  max-width:100%;
 
+}
+
+
+.marquee-slider .ms-nav-items{
+  display: table;
 }
 
 .marquee-slider .ms-nav .item {
@@ -45,7 +51,8 @@
   border-radius: 8px;
   width: 120px;
   /* This makes things *much* easier */
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   height:100px;
   position: absolute;
   top: 0;
