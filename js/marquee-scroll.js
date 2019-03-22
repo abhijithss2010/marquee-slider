@@ -258,6 +258,10 @@
       var xPos = (_this.currentNavXPos || 0) + 0.2;
       _this.percentScrolled=_this.scrollHandle(xPos);
 
+      if(_this.navItemContainerWidth > _this.visibleAreaWidth){
+        _this.scrollNavTrack();
+      }
+
       _this.scrollTrack();
 
       if (_this.currentNavXPos > (_this.navWidth - _this.scrollerWidth)) {

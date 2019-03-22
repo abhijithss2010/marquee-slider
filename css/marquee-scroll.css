@@ -12,6 +12,13 @@
   display: table-cell;
 }
 
+.marquee-slider .ms-track .item img {
+  height:400px;
+  width:auto;
+  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
+}
+
 .marquee-slider .ms-nav {
   display: inline-block;
   -webkit-touch-callout: none; /* iOS Safari */
@@ -20,10 +27,10 @@
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
-  height: 100px;
+  height: auto;
   background:#ccc;
   position: relative;
-  border:1px solid blue;
+  /* border:1px solid blue; */
   max-width:100%;
 
 }
@@ -44,7 +51,7 @@
 
 .ms-scroll {
   background-color: transparent;
-  border:2px solid red;
+  border:1px solid red;
   color: white;
   font-size: 20px;
   font-family: sans-serif;
