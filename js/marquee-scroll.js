@@ -42,6 +42,8 @@
     var _this = this;
     var images = [];
     var templateInner = '';
+    var itemGroup = {};
+    var groupConcated = ''
 
 
     _this.$el.addClass(fixedValues.className);
@@ -50,16 +52,32 @@
 
 
     _this.$el.find('img').each(function () {
-      templateInner += '<div class="item">' + $(this)[0].outerHTML + '</div>';
+
+      templateInner += '<div class="item">'+ $(this)[0].outerHTML +'</div>';
+      
+      if(!itemGroup.hasOwnProperty($(this).data('group'))){
+        itemGroup[$(this).data('group')] = '';
+      } 
+
+      itemGroup[$(this).data('group')] += '<li class="item">' + $(this)[0].outerHTML + '</li>';
+      
       $(this).remove();
     });
+
+    console.log(itemGroup);
+
+    for(var groupName in itemGroup){
+      groupConcated += '<ul class="item-group" data-group-name='+ groupName +'>' + itemGroup[groupName] + '</ul>';
+    }
+
+
 
     template = '<div class="ms-track">' +
       templateInner +
       '</div>' +
       '<div class="ms-nav">' +
       '<div class="ms-nav-items">' +
-      templateInner +
+      groupConcated +
       '</div>' +
       '<div class="ms-scroll">' +
       '</div>' +
@@ -197,17 +215,17 @@
     _this.setTranslate(xPos, 0, _this.$scrollHandle);
     _this.xOffset = xPos;
 
-    _this.percentScrolled = (xPos/(_this.navWidth - _this.scrollerWidth)) * 100;
+    _this.percentScrolled = ((xPos/(_this.navWidth - _this.scrollerWidth)) * 100).toFixed(3);
   };
 
   Plugin.prototype.scrollTrack = function (isDragged) {
     var _this = this;
 
-    _this.currentTrackXPos = isDragged ? ((_this.percentScrolled/100) * (_this.trackWidth- _this.visibleAreaWidth)): _this.currentTrackXPos + 1  ;
+    _this.currentTrackXPos = isDragged ? ((_this.percentScrolled/100) * (_this.trackWidth- _this.visibleAreaWidth)): _this.currentTrackXPos + 2  ;
 
     _this.setTranslate(-_this.currentTrackXPos, 0, _this.$scrollTrack);
 
-    _this.percentScrolled = (_this.currentTrackXPos/(_this.trackWidth - _this.visibleAreaWidth))*100;
+    _this.percentScrolled = ((_this.currentTrackXPos/(_this.trackWidth - _this.visibleAreaWidth))*100).toFixed(3);
   };
 
   Plugin.prototype.scrollNavTrack = function () {
@@ -220,7 +238,9 @@
   Plugin.prototype.autoScroll = function () {
     var _this = this;
 
-    _this.animSet = setInterval(_this.scrollAnimation.bind(_this), 1000 / 60);
+    // _this.animSet = setInterval(_this.scrollAnimation.bind(_this), 1000 / 60);
+
+    window.requestAnimationFrame(_this.scrollAnimation.bind(_this));
   };
 
   Plugin.prototype.scrollAnimation = function () {
@@ -236,16 +256,17 @@
         _this.scrollNavTrack();
       }
 
-      console.log(_this.percentScrolled);
+      // console.log(_this.percentScrolled);
 
       if (_this.percentScrolled > 100) {
         _this.percentScrolled = 0;
         _this.currentTrackXPos = 0;
       } else {
-
+        
       }
 
     }
+    window.requestAnimationFrame(_this.scrollAnimation.bind(_this));
 
   };
 

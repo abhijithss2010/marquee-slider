@@ -6,6 +6,7 @@
   display: table;
   -webkit-transform: translate3d(0%,0,0);
           transform: translate3d(0%,0,0);
+  will-change: transform;
 }
 
 .marquee-slider .ms-track .item {
@@ -13,7 +14,7 @@
 }
 
 .marquee-slider .ms-track .item img {
-  height:400px;
+  height:708px;
   width:auto;
   -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
   filter: grayscale(100%);
@@ -69,3 +70,23 @@
   z-index: 2;
 }
 
+
+.item-group{
+  padding: 0;
+  margin: 0;
+  display: table-cell;
+  position: relative;
+}
+
+.item-group:before{
+  content: attr(data-group-name);
+  position: absolute;
+  left:0;
+  right:0;
+  top:0;
+  bottom: 0;
+  background:rgba(255,255,255,0.3);
+  color:#b92227;
+  font-size: 30px;
+  text-align: center;
+}
